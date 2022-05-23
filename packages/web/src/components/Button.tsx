@@ -3,7 +3,7 @@ import type { ButtonHTMLAttributes } from 'react';
 interface Props extends ButtonHTMLAttributes<any> {
   fullWidth?: boolean;
   height?: 'sm' | 'md' | 'lg';
-  skin?: 'default' | 'primary' | 'secondary' | 'icon' | 'delete';
+  skin?: 'default' | 'primary' | 'secondary' | 'tertiary' | 'icon' | 'delete';
   options?: { label: string; value: string }[];
   optionClick?: (value: string) => void;
   showArrowIcon?: boolean;
@@ -33,6 +33,12 @@ export default function Button({
     secondary: {
       bg: 'bg-secondary hover:bg-white',
       text: 'text-white hover:text-secondary',
+      font: 'font-semibold',
+      border: 'border-2 border-transparent hover:border-secondary',
+    },
+    tertiary: {
+      bg: 'bg-gray-200 hover:bg-white',
+      text: 'text-gray-500 hover:text-secondary',
       font: 'font-semibold',
       border: 'border-2 border-transparent hover:border-secondary',
     },

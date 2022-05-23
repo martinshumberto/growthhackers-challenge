@@ -89,7 +89,7 @@ export default function Modal({
             <div className="grid grid-cols-2 gap-2 mt-4">
               <Button
                 fullWidth={true}
-                skin="secondary"
+                skin="tertiary"
                 onClick={handleCloseClick}
               >
                 Cancelar

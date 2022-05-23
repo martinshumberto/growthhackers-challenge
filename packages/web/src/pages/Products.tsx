@@ -1,5 +1,7 @@
 import Button from '@/components/Button';
 import Modal from '@/components/Modal';
+import ProductNew from '@/components/modal-contents/ProductNew';
+import ProductUpdate from '@/components/modal-contents/ProductUpdate';
 import Table from '@/components/Table';
 import { useMemo, useState } from 'react';
 import { Edit2, Eye, Trash2 } from 'react-feather';
@@ -114,13 +116,43 @@ export default function Products() {
           title="Tem certeza que gostaria de deletar?"
           subTitle={
             <>
-              Confirmação de revogação necessária para continuar. <br />
-              Ao revogar esse dado você ainda poderá revê-lo, mas não
-              reativa-lo.
+              Confirmação de exclusão necessária para continuar. <br />
+              Ao deletar este produto você não poderá recuperá-lo.
             </>
           }
           skin="delete"
         />
+      )}
+      {activeModal === 'new' && (
+        <Modal
+          onClose={() => setActiveModal('')}
+          title="Novo produto"
+          subTitle={
+            <>
+              Para adicionar um novo produto basta preencher os campos abaixo.
+            </>
+          }
+          skin="default"
+        >
+          <ProductNew onClose={() => setActiveModal('')} />
+        </Modal>
+      )}
+      {activeModal === 'update' && (
+        <Modal
+          onClose={() => setActiveModal('')}
+          title="Atualizar produto"
+          subTitle={
+            <>
+              Para atualizar o produto basta alterar os campos desejados abaixo.
+            </>
+          }
+          skin="default"
+        >
+          <ProductUpdate
+            product={selectedItem}
+            onClose={() => setActiveModal('')}
+          />
+        </Modal>
       )}
       <div className="flex flex-col w-full">
         <div className="flex items-center justify-between mb-6">
