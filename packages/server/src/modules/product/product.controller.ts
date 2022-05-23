@@ -1,19 +1,12 @@
 import {
   Controller,
   Get,
-  Post,
-  Put,
   Res,
   Body,
-  UseGuards,
   Query,
   DefaultValuePipe,
   ParseIntPipe,
   HttpStatus,
-  Param,
-  Delete,
-  Headers,
-  Req,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 
@@ -27,7 +20,7 @@ export class ProductController {
     @Res() res,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
-  ): Promise<ProductDto[]> {
+  ): Promise<any> {
     try {
       return this.productService.findAll({
         page: Number(page),

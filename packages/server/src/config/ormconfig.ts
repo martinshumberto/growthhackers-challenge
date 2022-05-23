@@ -37,9 +37,6 @@ export class TypeOrmConfig {
       database: configService.get('DB_DATABASE'),
       entities: [__dirname + '/../modules/**/*.entity{.ts,.js}'],
       migrations: [__dirname + '/../migration/*.{ts,js}'],
-      cli: {
-        migrationsDir: __dirname + '/../migration',
-      },
       synchronize: true,
       logging: true,
       extra: {

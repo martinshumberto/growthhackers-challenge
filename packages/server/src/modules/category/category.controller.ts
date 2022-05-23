@@ -14,7 +14,6 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { CategoryEntity } from './category.entity';
 import { CategoryService } from './category.service';
 
 @Controller('categories')
@@ -27,7 +26,7 @@ export class CategoryController {
     @Res() res,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
-  ): Promise<CategoryEntity[]> {
+  ): Promise<any> {
     try {
       return this.categoryService.findAll({
         page: Number(page),

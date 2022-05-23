@@ -13,10 +13,10 @@ export class ProductDto {
   })
   price: number;
 
-  categoryId: string | null;
-
   @IsNotEmpty({
     message: 'Informe o status do produto',
   })
   status: boolean | null;
+
+  categoryId?: string | null;
 }
