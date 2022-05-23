@@ -1,5 +1,7 @@
-function App() {
-  return <div>GrowthHackers</div>;
-}
+import { useRoutes } from 'react-router-dom';
+import routes from './routes';
 
-export default App;
+export default function App() {
+  const page = useRoutes(routes);
+  return <>{page}</>;
+}
