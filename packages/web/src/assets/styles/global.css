@@ -12,12 +12,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.025em;
 }
-
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;
 }
-
 ::-webkit-file-upload-button {
     cursor: pointer;
 }

@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Header from '@/components/Header';
 
-function Default() {
+export default function Default() {
   return (
     <div className="bg-primary-100 min-h-screen h-full block pb-20">
       <Header />
@@ -13,5 +13,3 @@ function Default() {
     </div>
   );
 }
-
-export default Default;

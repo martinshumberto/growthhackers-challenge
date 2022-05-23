@@ -3,5 +3,10 @@ import routes from './routes';
 
 export default function App() {
   const page = useRoutes(routes);
-  return <>{page}</>;
+  return (
+    <>
+      {page}
+      <div id="modal-root"></div>
+    </>
+  );
 }
