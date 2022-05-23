@@ -2,6 +2,7 @@ import Button from '@/components/Button';
 import Modal from '@/components/Modal';
 import ProductNew from '@/components/modal-contents/ProductNew';
 import ProductUpdate from '@/components/modal-contents/ProductUpdate';
+import ProductView from '@/components/modal-contents/ProductView';
 import Table from '@/components/Table';
 import { useMemo, useState } from 'react';
 import { Edit2, Eye, Trash2 } from 'react-feather';
@@ -76,7 +77,7 @@ export default function Products() {
             <div className="flex space-x-3">
               <Button
                 skin="icon"
-                onClick={() => handlerSelectItem('update', props.row.original)}
+                onClick={() => handlerSelectItem('view', props.row.original)}
               >
                 <Eye size={18} />
               </Button>
@@ -149,6 +150,18 @@ export default function Products() {
           skin="default"
         >
           <ProductUpdate
+            product={selectedItem}
+            onClose={() => setActiveModal('')}
+          />
+        </Modal>
+      )}
+      {activeModal === 'view' && (
+        <Modal
+          enableClose
+          onClose={() => setActiveModal('')}
+          skin="default"
+        >
+          <ProductView
             product={selectedItem}
             onClose={() => setActiveModal('')}
           />

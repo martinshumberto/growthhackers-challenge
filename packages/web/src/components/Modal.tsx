@@ -1,17 +1,18 @@
 import ReactDOM from 'react-dom';
 import { useEffect, useState, ReactElement } from 'react';
 import Button from '@/components/Button';
-import { Trash2 } from 'react-feather';
+import { Trash2, X } from 'react-feather';
 
 interface Props {
   children?: ReactElement;
   onClose: VoidFunction;
   onSubmit?: VoidFunction;
   closeOnSubmit?: boolean;
-  title: JSX.Element | string;
+  title?: JSX.Element | string;
   subTitle?: JSX.Element | string;
   fullWidth?: boolean;
   skin?: 'default' | 'compact' | 'delete' | 'enable';
+  enableClose?: boolean;
 }
 
 export default function Modal({
@@ -23,6 +24,7 @@ export default function Modal({
   subTitle,
   skin,
   fullWidth,
+  enableClose,
 }: Props) {
   const [isBrowser, setIsBrowser] = useState(false);
   useEffect(() => {
@@ -65,6 +67,17 @@ export default function Modal({
           }
           `}
         >
+          {enableClose ? (
+            <div
+              className={`flex absolute cursor-pointer
+              ${skin === 'compact' ? 'top-6 right-6' : 'top-10 right-10'}`}
+            >
+              <Button skin="icon" onClick={handleCloseClick}>
+                <X size={20} aria-hidden="true" />
+              </Button>
+            </div>
+          ) : null}
+
           {skin === 'delete' && (
             <div className="w-12 h-12 p-3 bg-red-200 rounded-full mb-3 mx-auto">
               <Trash2 color="red" />
