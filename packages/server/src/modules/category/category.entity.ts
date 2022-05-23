@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'products' })
+@Entity({ name: 'categories' })
 export class CategoryEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
