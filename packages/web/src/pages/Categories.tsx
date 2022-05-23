@@ -2,6 +2,7 @@ import Button from '@/components/Button';
 import Modal from '@/components/Modal';
 import CategoryNew from '@/components/modal-contents/CategoryNew';
 import CategoryUpdate from '@/components/modal-contents/CategoryUpdate';
+import CategoryView from '@/components/modal-contents/CategoryView';
 import Table from '@/components/Table';
 import { useMemo, useState } from 'react';
 import { Edit2, Eye, Trash2 } from 'react-feather';
@@ -60,7 +61,7 @@ export default function Categories() {
             <div className="flex space-x-3">
               <Button
                 skin="icon"
-                onClick={() => handlerSelectItem('update', props.row.original)}
+                onClick={() => handlerSelectItem('view', props.row.original)}
               >
                 <Eye size={18} />
               </Button>
@@ -135,6 +136,14 @@ export default function Categories() {
           skin="default"
         >
           <CategoryUpdate
+            category={selectedItem}
+            onClose={() => setActiveModal('')}
+          />
+        </Modal>
+      )}
+      {activeModal === 'view' && (
+        <Modal enableClose onClose={() => setActiveModal('')} skin="default">
+          <CategoryView
             category={selectedItem}
             onClose={() => setActiveModal('')}
           />
