@@ -28,12 +28,12 @@ export default function Textarea({
       bg: 'bg-white',
       border:
         'border focus:ring-2 focus:ring-primary-300 focus:border-transparent',
-      text: 'placeholder-primary-300 text-primary',
+      text: 'placeholder-gray-300 text-gray-800',
     },
     primary: {
       bg: 'bg-primary-200',
       border: 'focus:ring-2 focus:ring-primary-300 focus:border-transparent',
-      text: 'placeholder-primary-300 text-primary',
+      text: 'placeholder-gray-300 text-gray-800',
     },
   };
   const inputSkin = skins[skin];

@@ -41,7 +41,7 @@ export default function ProductNew({ onClose }) {
 
   const fetchCategories = async (name = '') => {
     return await api
-      .get(`/customer/users`, {
+      .get(`/categories`, {
         params: {
           search: name,
         },
@@ -161,7 +161,6 @@ export default function ProductNew({ onClose }) {
                 setValue('status', v);
               }}
               options={statusOptions}
-              loadOptions={fetchCategories}
               placeholder="Selecione o status"
               isDisabled={formState.isSubmitting}
             />

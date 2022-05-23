@@ -92,7 +92,7 @@ export default function Table({
   return (
     <div className="flex flex-col overflow-x-auto pb-4 w-full text-gray-800">
       <table {...getTableProps()}>
-        <thead className="text-xs uppercase">
+        <thead className="text-sm uppercase">
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
@@ -104,7 +104,7 @@ export default function Table({
           ))}
         </thead>
         {loading ? (
-          <tbody className="text-sm" {...getTableBodyProps()}>
+          <tbody className="text-md" {...getTableBodyProps()}>
             <tr>
               <td colSpan={10000} className="mt-10">
                 Carregando...
@@ -112,7 +112,7 @@ export default function Table({
             </tr>
           </tbody>
         ) : (
-          <tbody className="text-sm" {...getTableBodyProps()}>
+          <tbody className="text-md" {...getTableBodyProps()}>
             {data.length ? (
               page.map((row: any) => {
                 prepareRow(row);

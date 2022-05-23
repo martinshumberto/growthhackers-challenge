@@ -40,19 +40,12 @@ export default function ProductUpdate({ product, onClose }) {
   });
 
   const formOptions = { resolver: yupResolver(validationSchema) };
-  const {
-    register,
-    handleSubmit,
-    formState,
-    reset,
-    control,
-    setValue,
-    watch,
-  } = useForm(formOptions);
+  const { register, handleSubmit, formState, reset, control, setValue, watch } =
+    useForm(formOptions);
 
   const fetchCategories = async (name = '') => {
     return await api
-      .get(`/customer/users`, {
+      .get(`/categories`, {
         params: {
           search: name,
         },
@@ -78,7 +71,7 @@ export default function ProductUpdate({ product, onClose }) {
 
   const submit = async (data) => {
     await api
-      .put(`/products/new/${product.id}`, data)
+      .put(`/products/update/${product.id}`, data)
       .then(() => {
         notify({
           title: 'Opa, tudo certo!',
@@ -198,7 +191,6 @@ export default function ProductUpdate({ product, onClose }) {
                   defaultValue={statusOptions.find((c) => {
                     return c.value === watch('status');
                   })}
-                  loadOptions={fetchCategories}
                   placeholder="Selecione o status"
                   isDisabled={formState.isSubmitting}
                 />
