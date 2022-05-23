@@ -1,4 +1,5 @@
 import { useRoutes } from 'react-router-dom';
+import { ReactNotifications } from 'react-notifications-component';
 import routes from './routes';
 
 export default function App() {
@@ -6,6 +7,7 @@ export default function App() {
   return (
     <>
       {page}
+      <ReactNotifications />
       <div id="modal-root"></div>
     </>
   );
