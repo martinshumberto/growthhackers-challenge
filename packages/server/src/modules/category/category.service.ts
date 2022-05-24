@@ -32,6 +32,10 @@ export class CategoryService {
     return await this.repository.save(category);
   }
 
+  async createMany(categories: CategoryDto[]) {
+    return await this.repository.save(categories);
+  }
+
   async update(id: string, category: CategoryDto) {
     await validate(category);
     const updateResponse = await this.repository.update({ id }, category);
@@ -79,11 +83,13 @@ export class CategoryService {
     { search }: ICategorySearch,
   ): Promise<Pagination<CategoryEntity>> {
     const queryBuilder = this.repository.createQueryBuilder('categories');
+    // queryBuilder.leftJoinAndSelect('categories.products', 'products');
     if (search) {
       queryBuilder.where('categories.title ilike :title', {
         title: `%${search}%`,
       });
     }
+    queryBuilder.orderBy('categories.updatedAt', 'DESC');
     return await paginate<CategoryEntity>(queryBuilder, options);
   }
 }

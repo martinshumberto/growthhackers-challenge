@@ -10,6 +10,8 @@ import {
 } from 'nestjs-typeorm-paginate';
 import NotFoundCustomException from 'src/common/exceptions/notFound.exception';
 import { validate } from 'class-validator';
+import { promisify } from 'util';
+import * as fs from 'fs';
 
 @Injectable()
 export class ProductService {
@@ -21,6 +23,10 @@ export class ProductService {
   async create(product: ProductDto) {
     await validate(product);
     return await this.repository.save(product);
+  }
+
+  async createMany(products: ProductDto[]) {
+    return await this.repository.save(products);
   }
 
   async update(id: string, product: ProductDto) {
@@ -56,6 +62,34 @@ export class ProductService {
   async findAll(
     options: IPaginationOptions,
   ): Promise<Pagination<ProductEntity>> {
-    return await paginate<ProductEntity>(this.repository, options);
+    const queryBuilder = this.repository.createQueryBuilder('products');
+    queryBuilder.leftJoinAndSelect('products.category', 'categories');
+    queryBuilder.orderBy('products.updatedAt', 'DESC');
+    return await paginate<ProductEntity>(queryBuilder, options);
+  }
+
+  async extractJSONFromFile(pathFileTemp): Promise<ProductDto[]> {
+    const readFileAsync = promisify(fs.readFile);
+    const dataStringJSON = await readFileAsync(pathFileTemp, 'utf8');
+    let dataJSON = [new ProductDto()];
+    try {
+      dataJSON = JSON.parse(dataStringJSON);
+      dataJSON.forEach(async (item) => {
+        await validate(item);
+      });
+    } catch (e) {
+      throw {
+        status: 422,
+        message: `O conteúdo JSON contido no arquivo é inválido. Confira o nosso modelo, e tente novamente após corrigir seu arquivo.`,
+      };
+    }
+    const unlinkAsync = promisify(fs.unlink);
+    await unlinkAsync(pathFileTemp);
+
+    return dataJSON;
+  }
+
+  async findAllNotPaginate() {
+    return await this.repository.find();
   }
 }

@@ -13,9 +13,15 @@ import {
   Put,
   Delete,
   Post,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Pagination } from 'nestjs-typeorm-paginate';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+
+const DIR_TEMP_FILES = `${__dirname}/../../../temp/`;
 
 @Controller('products')
 export class ProductController {
@@ -67,5 +73,41 @@ export class ProductController {
       status: HttpStatus.OK,
       message: 'O produto foi deletado com sucesso.',
     });
+  }
+
+  @Post('/import/:id')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: DIR_TEMP_FILES,
+      }),
+    }),
+  )
+  async upload(@Res() res, @UploadedFile() file, @Param('id') id: string) {
+    try {
+      const pathFileTemp = `${DIR_TEMP_FILES}/${file.filename}`;
+      const products = await this.productService.extractJSONFromFile(
+        pathFileTemp,
+      );
+
+      const productsWithCategory = products.map((product) => {
+        return {
+          ...product,
+          categoryId: id,
+        };
+      });
+      await this.productService.createMany(productsWithCategory);
+
+      return res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
+        message:
+          'A importação foi um sucesso, navegue até a página de produtos para visualizar.',
+      });
+    } catch ($e) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Algo deu errado ao tentar processar o arquivo.',
+        errors: $e,
+      });
+    }
   }
 }

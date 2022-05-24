@@ -1,5 +1,6 @@
 import Button from '@/components/Button';
 import Modal from '@/components/Modal';
+import ProductImport from '@/components/modal-contents/ProductImport';
 import ProductNew from '@/components/modal-contents/ProductNew';
 import ProductUpdate from '@/components/modal-contents/ProductUpdate';
 import ProductView from '@/components/modal-contents/ProductView';
@@ -183,6 +184,24 @@ export default function Products() {
           />
         </Modal>
       )}
+
+      {activeModal === 'import' && (
+        <Modal
+          onClose={() => setActiveModal('')}
+          title="Importar produtos"
+          subTitle={
+            <>
+              Para importar seus produtos de um arquivo .json, basta
+              selecioná-lo abaixo e escolher a categoria que será vinculada aos
+              produtos.
+            </>
+          }
+          skin="compact"
+          enableClose
+        >
+          <ProductImport onClose={() => setActiveModal('')} />
+        </Modal>
+      )}
       {activeModal === 'view' && (
         <Modal enableClose onClose={() => setActiveModal('')} skin="default">
           <ProductView product={selectedItem} />
@@ -192,7 +211,15 @@ export default function Products() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="flex text-2xl font-bold text-primary">Produtos</h2>
 
-          <div className="flex">
+          <div className="flex space-x-4">
+            <Button skin="primary" onClick={() => setActiveModal('import')}>
+              Importar
+            </Button>
+
+            <Button skin="tertiary" onClick={() => setActiveModal('export')}>
+              Exportar
+            </Button>
+
             <Button skin="secondary" onClick={() => setActiveModal('new')}>
               Novo
             </Button>
