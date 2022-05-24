@@ -217,10 +217,19 @@ export default function ProductUpdate({ product, onClose }: IProps) {
       </div>
 
       <div className="flex flex-col md:justify-end md:flex-row space-y-2 md:space-x-4 md:space-y-0 mt-6">
-        <Button skin="tertiary" onClick={handleCloseClick} type="button">
+        <Button
+          skin="tertiary"
+          onClick={handleCloseClick}
+          type="button"
+          disabled={formState.isSubmitting}
+        >
           Cancelar
         </Button>
-        <Button skin="secondary" type="submit">
+        <Button
+          skin="secondary"
+          type="submit"
+          disabled={formState.isSubmitting}
+        >
           Criar
         </Button>
       </div>
