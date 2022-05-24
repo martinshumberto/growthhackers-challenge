@@ -8,6 +8,8 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
+import NotFoundCustomException from 'src/common/exceptions/notFound.exception';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class ProductService {
@@ -17,24 +19,38 @@ export class ProductService {
   ) {}
 
   async create(product: ProductDto) {
+    await validate(product);
     return await this.repository.save(product);
   }
 
-  async update(productId: string, product: any) {
-    return await this.repository.update(
-      {
-        id: productId,
-      },
-      product,
-    );
+  async update(id: string, product: ProductDto) {
+    await validate(product);
+    const updateResponse = await this.repository.update({ id }, product);
+    if (!updateResponse.affected) {
+      throw new NotFoundCustomException(id);
+    }
+    return updateResponse;
   }
 
   async delete(id: string) {
-    return await this.repository.delete(id);
+    const deleteResponse = await this.repository.delete(id);
+    if (!deleteResponse.affected) {
+      throw new NotFoundCustomException(id);
+    }
+    return deleteResponse;
   }
 
   async findOne(params: FindOneOptions<ProductEntity> = {}) {
     return await this.repository.findOne(params);
+  }
+
+  async getById(id: string): Promise<ProductEntity> {
+    return await this.repository.findOne({
+      where: {
+        id,
+      },
+      relations: ['category'],
+    });
   }
 
   async findAll(

@@ -6,6 +6,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity({ name: 'products' })
@@ -33,6 +34,7 @@ export class ProductEntity {
       onDelete: 'SET NULL',
     },
   )
+  @JoinColumn({ name: 'categoryId' })
   category: CategoryEntity;
 
   @Column({ type: 'varchar', nullable: true })
