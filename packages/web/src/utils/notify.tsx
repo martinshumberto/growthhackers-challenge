@@ -4,7 +4,7 @@ export default function notify({ title, message, type }) {
   if (typeof window !== 'undefined') {
     Store.addNotification({
       title,
-      message,
+      message: Array?.isArray(message) ? message.map((e) => e) : message,
       type,
       insert: 'bottom',
       container: 'bottom-right',

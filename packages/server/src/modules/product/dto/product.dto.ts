@@ -39,12 +39,6 @@ export class ProductDto {
   @IsNotEmpty({
     message: 'Informe o preço do produto.',
   })
-  @IsDecimal(
-    {},
-    {
-      message: 'O preço do produto deve estar em formato decimal.',
-    },
-  )
   price: number;
 
   @IsBoolean()

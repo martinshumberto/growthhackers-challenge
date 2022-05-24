@@ -23,14 +23,20 @@ export class CategoryController {
 
   @Get('/')
   async index(
+    @Query('search') search = null,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
   ): Promise<Pagination<CategoryDto>> {
-    return this.categoryService.findAll({
-      page: Number(page),
-      limit: Number(limit),
-      route: `${process.env.API_URL}/categories`,
-    });
+    return this.categoryService.findAll(
+      {
+        page: Number(page),
+        limit: Number(limit),
+        route: `${process.env.API_URL}/categories`,
+      },
+      {
+        search,
+      },
+    );
   }
 
   @Get('/show/:id')

@@ -156,9 +156,7 @@ export default function Select({
                   options.map(({ value }) => value),
                   options
                 );
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              else props.onChange([options.value], [options]);
+              else props.onChange(options?.value, options);
           }}
         />
       ) : (

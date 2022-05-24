@@ -6,8 +6,9 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import notify from '@/utils/notify';
 import Select from '@/components/Select';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Textarea from '@/components/Textarea';
+import { ICategory, IDefaultResponse, IPagination } from '@/types/api';
 
 export default function ProductNew({ onClose }) {
   const [categoriesOptions, setCategoriesOptions] = useState([]);
@@ -31,7 +32,7 @@ export default function ProductNew({ onClose }) {
       .max(255, 'A nome deve no máximo 255 caracteres.'),
     description: Yup.string().nullable(),
     price: Yup.number().positive('O preço deve ser um número positivo.'),
-    categoryId: Yup.string().required('O celular é obrigatório.'),
+    categoryId: Yup.string().nullable(),
     status: Yup.boolean().default(true),
   });
 
@@ -39,50 +40,39 @@ export default function ProductNew({ onClose }) {
   const { register, handleSubmit, formState, reset, control, setValue } =
     useForm(formOptions);
 
-  const fetchCategories = async (name = '') => {
+  const fetchCategories = async (search = null) => {
     return await api
-      .get(`/categories`, {
+      .get<IPagination<ICategory>>(`/categories`, {
         params: {
-          search: name,
+          search: search,
         },
       })
       .then(({ data }) => {
-        const items = data.data.map((e) => {
+        const items = data.items.map((e) => {
           return {
-            label: e.name,
+            label: e.title,
             value: e.id,
           };
         });
         setCategoriesOptions(items);
         return items;
-      })
-      .catch(({ response }) => {
-        notify({
-          title: 'Opss... algo deu errado!',
-          message: response?.data?.message,
-          type: 'danger',
-        });
       });
   };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const submit = async (data) => {
     await api
-      .post('/products/new', data)
-      .then(() => {
+      .post<IDefaultResponse>('/products/create', data)
+      .then(({ data }) => {
+        handleCloseClick();
         notify({
           title: 'Opa, tudo certo!',
-          message: 'O produto foi criado com sucesso.',
+          message: data.message,
           type: 'success',
         });
-        handleCloseClick();
         reset();
-      })
-      .catch(({ response }) => {
-        notify({
-          title: 'Algo deu errado!',
-          message: response.data.message,
-          type: 'danger',
-        });
       });
   };
 
@@ -141,7 +131,7 @@ export default function ProductNew({ onClose }) {
                   }}
                   defaultOptions={categoriesOptions}
                   loadOptions={fetchCategories}
-                  placeholder={'Selecione uma categoria'}
+                  placeholder={'Selecione uma categoria ou digite para buscar'}
                   isDisabled={formState.isSubmitting}
                 />
               )}

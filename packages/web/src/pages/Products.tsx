@@ -43,6 +43,11 @@ export default function Products() {
         ),
       },
       {
+        Header: 'Categoria',
+        accessor: 'category.title',
+        Cell: ({ value }) => <span className="truncate">{value ?? '-'}</span>,
+      },
+      {
         Header: 'Criado em',
         accessor: 'createdAt',
         Cell: ({ value }) => dateFormat(value),
@@ -59,14 +64,12 @@ export default function Products() {
               >
                 <Eye size={18} />
               </Button>
-
               <Button
                 skin="icon"
                 onClick={() => handlerSelectItem('update', props.row.original)}
               >
                 <Edit2 size={18} />
               </Button>
-
               <Button
                 skin="icon"
                 onClick={() => handlerSelectItem('delete', props.row.original)}
@@ -120,12 +123,11 @@ export default function Products() {
 
   useMemo(
     () =>
-      !activeModal
-        ? fetchData({
-            limit: meta?.itemsPerPage || 10,
-            page: meta?.currentPage || 1,
-          })
-        : null,
+      !activeModal &&
+      fetchData({
+        limit: meta?.itemsPerPage || 10,
+        page: meta?.currentPage || 1,
+      }),
     [activeModal]
   );
 
@@ -178,10 +180,7 @@ export default function Products() {
       )}
       {activeModal === 'view' && (
         <Modal enableClose onClose={() => setActiveModal('')} skin="default">
-          <ProductView
-            product={selectedItem}
-            onClose={() => setActiveModal('')}
-          />
+          <ProductView product={selectedItem} />
         </Modal>
       )}
       <div className="flex flex-col w-full">

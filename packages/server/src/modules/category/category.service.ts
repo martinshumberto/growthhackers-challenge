@@ -16,6 +16,10 @@ enum PostgresErrorCode {
   ForeignKeyViolation = '23503',
 }
 
+interface ICategorySearch {
+  search?: string;
+}
+
 @Injectable()
 export class CategoryService {
   constructor(
@@ -72,7 +76,14 @@ export class CategoryService {
 
   async findAll(
     options: IPaginationOptions,
+    { search }: ICategorySearch,
   ): Promise<Pagination<CategoryEntity>> {
-    return await paginate<CategoryEntity>(this.repository, options);
+    const queryBuilder = this.repository.createQueryBuilder('categories');
+    if (search) {
+      queryBuilder.where('categories.title ilike :title', {
+        title: `%${search}%`,
+      });
+    }
+    return await paginate<CategoryEntity>(queryBuilder, options);
   }
 }
