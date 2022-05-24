@@ -9,6 +9,13 @@ wait_for() {
 
 yarn install
 
+if [ -e .env ]; then
+    echo 'Found .env'
+else
+    echo 'Not found .env, creating...'
+    cp .env.example .env
+fi
+
 wait_for 10 db 5432
 
 yarn typeorm migration:run

@@ -118,7 +118,7 @@ export default function ProductUpdate({ product, onClose }: IProps) {
           <div className="md:flex-1">
             <Controller
               control={control}
-              name="title"
+              name="price"
               render={({ field: { value } }) => (
                 <Input
                   fullWidth={true}
