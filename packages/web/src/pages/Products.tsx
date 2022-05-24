@@ -4,53 +4,29 @@ import ProductNew from '@/components/modal-contents/ProductNew';
 import ProductUpdate from '@/components/modal-contents/ProductUpdate';
 import ProductView from '@/components/modal-contents/ProductView';
 import Table from '@/components/Table';
+import api from '@/services/api';
+import {
+  IDefaultResponse,
+  IPagination,
+  IPaginationMeta,
+  IProduct,
+} from '@/types/api.d';
+import { amountFormat, dateFormat } from '@/utils/helper';
+import notify from '@/utils/notify';
 import { useMemo, useState } from 'react';
 import { Edit2, Eye, Trash2 } from 'react-feather';
 
 export default function Products() {
   const [loading, setLoading] = useState(false);
+  const [meta, setMeta] = useState<IPaginationMeta>(null);
+  const [data, setData] = useState<IProduct[]>([]);
   const [activeModal, setActiveModal] = useState('');
-  const [selectedItem, setSelectedItem] = useState([]);
+  const [selectedItem, setSelectedItem] = useState<IProduct>(null);
 
-  const handlerSelectItem = (modalName: string, selectedItem: []) => {
+  const handlerSelectItem = (modalName: string, selectedItem: IProduct) => {
     setActiveModal(modalName);
     setSelectedItem(selectedItem);
   };
-
-  const data = [
-    {
-      id: 1,
-      title: 'Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops',
-      price: 109.95,
-      category: 'Camisa',
-      status: true,
-      created_at: '2022-03-24T15:56:03.169Z',
-    },
-    {
-      id: 2,
-      title: 'Mens Casual Premium Slim Fit T-Shirts ',
-      price: 22.3,
-      category: 'Camisa',
-      status: true,
-      created_at: '2022-03-24T15:56:03.169Z',
-    },
-    {
-      id: 3,
-      title: 'Mens Cotton Jacket',
-      price: 55.99,
-      category: 'Camisa',
-      status: true,
-      created_at: '2022-03-24T15:56:03.169Z',
-    },
-    {
-      id: 4,
-      title: 'Mens Casual Slim Fit',
-      price: 15.99,
-      category: 'Camisa',
-      status: false,
-      created_at: '2022-03-24T15:56:03.169Z',
-    },
-  ];
 
   const columns = useMemo(
     () => [
@@ -62,12 +38,14 @@ export default function Products() {
       {
         Header: 'Preço',
         accessor: 'price',
-        Cell: ({ value }) => <span className="truncate">{value}</span>,
+        Cell: ({ value }) => (
+          <span className="truncate">{amountFormat(value)}</span>
+        ),
       },
       {
         Header: 'Criado em',
-        accessor: 'created_at',
-        Cell: ({ value }) => value,
+        accessor: 'createdAt',
+        Cell: ({ value }) => dateFormat(value),
       },
       {
         Header: 'Ações',
@@ -103,11 +81,53 @@ export default function Products() {
     []
   );
 
-  const fetchData = async () => {
-    try {
-      setLoading(false);
-    } catch {}
+  const fetchData = async ({ limit, page }) => {
+    setLoading(true);
+    await api
+      .get<IPagination>('/products', {
+        params: {
+          limit,
+          page,
+        },
+      })
+      .then(({ data }) => {
+        setData(data.items);
+        setMeta(data.meta);
+      })
+      .finally(() => setLoading(false));
   };
+
+  const deleteItem = async () => {
+    setLoading(true);
+    await api
+      .delete<IDefaultResponse>(`products/delete/${selectedItem.id}`)
+      .then(({ data }) => {
+        notify({
+          title: 'Opa, tudo certo!',
+          message: data.message,
+          type: 'success',
+        });
+      })
+      .finally(() => {
+        fetchData({
+          limit: meta?.itemsPerPage,
+          page: meta?.currentPage,
+        });
+        setLoading(false);
+        setActiveModal('');
+      });
+  };
+
+  useMemo(
+    () =>
+      !activeModal
+        ? fetchData({
+            limit: meta?.itemsPerPage || 10,
+            page: meta?.currentPage || 1,
+          })
+        : null,
+    [activeModal]
+  );
 
   return (
     <>
@@ -122,6 +142,7 @@ export default function Products() {
             </>
           }
           skin="delete"
+          onSubmit={deleteItem}
         />
       )}
       {activeModal === 'new' && (
@@ -156,11 +177,7 @@ export default function Products() {
         </Modal>
       )}
       {activeModal === 'view' && (
-        <Modal
-          enableClose
-          onClose={() => setActiveModal('')}
-          skin="default"
-        >
+        <Modal enableClose onClose={() => setActiveModal('')} skin="default">
           <ProductView
             product={selectedItem}
             onClose={() => setActiveModal('')}
@@ -183,6 +200,7 @@ export default function Products() {
           fetchData={fetchData}
           loading={loading}
           pagination
+          totalPages={meta?.totalPages}
           isDisabled={({ status }) => !status}
         />
       </div>

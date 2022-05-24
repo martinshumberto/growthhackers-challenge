@@ -2,7 +2,7 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 @import 'table';
-@import "react-notifications-component/dist/theme.css";
+@import 'react-notifications-component/dist/theme.css';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 body {
@@ -13,10 +13,12 @@ body {
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.025em;
 }
+
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;
 }
+
 ::-webkit-file-upload-button {
     cursor: pointer;
 }
@@ -26,6 +28,7 @@ code {
         width: 1.125em;
         height: .125em;
     }
+
     .navicon::before,
     .navicon::after {
         display: block;
@@ -36,27 +39,35 @@ code {
         content: '';
         background: #3D4852;
     }
+
     .navicon::before {
         top: 5px;
     }
+
     .navicon::after {
         top: -5px;
     }
+
     .menu-btn:not(:checked)~.menu {
         display: none;
     }
+
     .menu-btn:checked~.menu {
         display: block;
     }
+
     .menu-btn:checked~.menu-icon .navicon {
         background: transparent;
     }
+
     .menu-btn:checked~.menu-icon .navicon::before {
         transform: rotate(-45deg);
     }
+
     .menu-btn:checked~.menu-icon .navicon::after {
         transform: rotate(45deg);
     }
+
     .menu-btn:checked~.menu-icon .navicon::before,
     .menu-btn:checked~.menu-icon .navicon::after {
         top: 0;

@@ -4,42 +4,28 @@ import CategoryNew from '@/components/modal-contents/CategoryNew';
 import CategoryUpdate from '@/components/modal-contents/CategoryUpdate';
 import CategoryView from '@/components/modal-contents/CategoryView';
 import Table from '@/components/Table';
+import api from '@/services/api';
+import {
+  ICategory,
+  IDefaultResponse,
+  IPagination,
+  IPaginationMeta,
+} from '@/types/api';
+import notify from '@/utils/notify';
 import { useMemo, useState } from 'react';
 import { Edit2, Eye, Trash2 } from 'react-feather';
 
 export default function Categories() {
   const [loading, setLoading] = useState(false);
+  const [meta, setMeta] = useState<IPaginationMeta>(null);
+  const [data, setData] = useState<ICategory[]>([]);
   const [activeModal, setActiveModal] = useState('');
-  const [selectedItem, setSelectedItem] = useState([]);
+  const [selectedItem, setSelectedItem] = useState<ICategory>(null);
 
-  const handlerSelectItem = (modalName: string, selectedItem: []) => {
+  const handlerSelectItem = (modalName: string, selectedItem: ICategory) => {
     setActiveModal(modalName);
     setSelectedItem(selectedItem);
   };
-
-  const data = [
-    {
-      id: 1,
-      title: 'Tecnologia',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed laoreet ligula. Nullam vestibulum lacinia diam, et vehicula libero placerat vitae. Nunc posuere bibendum nibh vitae imperdiet. Nulla porta lectus a enim finibus tincidunt. Cras mollis sit amet arcu vel feugiat. Suspendisse malesuada turpis at tempus elementum.',
-      created_at: '2022-03-24T15:56:03.169Z',
-    },
-    {
-      id: 2,
-      title: 'Camisas',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed laoreet ligula. Nullam vestibulum lacinia diam, et vehicula libero placerat vitae. Nunc posuere bibendum nibh vitae imperdiet. Nulla porta lectus a enim finibus tincidunt. Cras mollis sit amet arcu vel feugiat. Suspendisse malesuada turpis at tempus elementum.',
-      created_at: '2022-03-24T15:56:03.169Z',
-    },
-    {
-      id: 3,
-      title: 'Jeans',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed laoreet ligula. Nullam vestibulum lacinia diam, et vehicula libero placerat vitae. Nunc posuere bibendum nibh vitae imperdiet. Nulla porta lectus a enim finibus tincidunt. Cras mollis sit amet arcu vel feugiat. Suspendisse malesuada turpis at tempus elementum.',
-      created_at: '2022-03-24T15:56:03.169Z',
-    },
-  ];
 
   const columns = useMemo(
     () => [
@@ -50,7 +36,7 @@ export default function Categories() {
       },
       {
         Header: 'Criado em',
-        accessor: 'created_at',
+        accessor: 'createdAt',
         Cell: ({ value }) => value,
       },
       {
@@ -87,10 +73,41 @@ export default function Categories() {
     []
   );
 
-  const fetchData = async () => {
-    try {
-      setLoading(false);
-    } catch {}
+  const fetchData = async ({ limit, page }) => {
+    setLoading(true);
+    await api
+      .get<IPagination>('/categories', {
+        params: {
+          limit,
+          page,
+        },
+      })
+      .then(({ data }) => {
+        setData(data.items);
+        setMeta(data.meta);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const deleteItem = async () => {
+    setLoading(true);
+    await api
+      .delete<IDefaultResponse>(`categories/delete/${selectedItem.id}`)
+      .then(({ data }) => {
+        notify({
+          title: 'Opa, tudo certo!',
+          message: data.message,
+          type: 'success',
+        });
+      })
+      .finally(() => {
+        fetchData({
+          limit: meta?.itemsPerPage,
+          page: meta?.currentPage,
+        });
+        setLoading(false);
+        setActiveModal('');
+      });
   };
 
   return (
@@ -105,6 +122,7 @@ export default function Categories() {
               Ao deletar este produto você não poderá recuperá-lo.
             </>
           }
+          onSubmit={deleteItem}
           skin="delete"
         />
       )}

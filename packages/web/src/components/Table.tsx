@@ -103,7 +103,7 @@ export default function Table({
             </tr>
           ))}
         </thead>
-        {loading ? (
+        {loading && !data.length ? (
           <tbody className="text-md" {...getTableBodyProps()}>
             <tr>
               <td colSpan={10000} className="mt-10">
