@@ -48,9 +48,6 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 200,
     maxAge: 600,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: process.env.NODE_ENV === 'production' ? '*' : '',
-    origin: process.env.NODE_ENV === 'production' ? '*' : 'http://localhost',
   });
 
   logger.verbose(`App listening on port => ${process.env.PORT || 4000}`);

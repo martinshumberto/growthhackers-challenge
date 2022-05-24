@@ -56,7 +56,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   }
 }
 
-export interface IResponseHttpError {
+export interface IResponseHttp {
   status: number;
   message: string;
   timestamp?: string;
