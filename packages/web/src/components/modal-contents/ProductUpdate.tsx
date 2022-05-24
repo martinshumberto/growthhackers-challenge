@@ -230,7 +230,7 @@ export default function ProductUpdate({ product, onClose }: IProps) {
           type="submit"
           disabled={formState.isSubmitting}
         >
-          Criar
+          Atualizar
         </Button>
       </div>
     </form>

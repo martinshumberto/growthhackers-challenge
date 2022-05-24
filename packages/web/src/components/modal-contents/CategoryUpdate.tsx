@@ -7,8 +7,14 @@ import Input from '@/components/Input';
 import notify from '@/utils/notify';
 import { useEffect } from 'react';
 import Textarea from '@/components/Textarea';
+import { ICategory, IDefaultResponse } from '@/types/api';
 
-export default function CategoryUpdate({ category, onClose }) {
+interface IProps {
+  category: ICategory;
+  onClose: () => void;
+}
+
+export default function CategoryUpdate({ category, onClose }: IProps) {
   const handleCloseClick = () => {
     onClose();
   };
@@ -30,22 +36,15 @@ export default function CategoryUpdate({ category, onClose }) {
 
   const submit = async (data) => {
     await api
-      .put(`/products/update/${category.id}`, data)
-      .then(() => {
+      .put<IDefaultResponse>(`/categories/update/${category.id}`, data)
+      .then(({ data }) => {
+        handleCloseClick();
         notify({
           title: 'Opa, tudo certo!',
-          message: 'A categoria foi atualizada com sucesso.',
+          message: data.message,
           type: 'success',
         });
-        handleCloseClick();
         reset();
-      })
-      .catch(({ response }) => {
-        notify({
-          title: 'Algo deu errado!',
-          message: response.data.message,
-          type: 'danger',
-        });
       });
   };
 
@@ -78,7 +77,7 @@ export default function CategoryUpdate({ category, onClose }) {
           <div className="md:flex-1">
             <Controller
               control={control}
-              name="title"
+              name="description"
               render={({ field: { value } }) => (
                 <Textarea
                   fullWidth={true}
@@ -88,7 +87,7 @@ export default function CategoryUpdate({ category, onClose }) {
                   id="description"
                   label="Descrição"
                   value={value}
-                  placeholder="Insira a descrição do produto"
+                  placeholder="Insira a descrição da categoria"
                   disabled={formState.isSubmitting}
                 />
               )}
@@ -98,11 +97,20 @@ export default function CategoryUpdate({ category, onClose }) {
       </div>
 
       <div className="flex flex-col md:justify-end md:flex-row space-y-2 md:space-x-4 md:space-y-0 mt-6">
-        <Button skin="tertiary" onClick={handleCloseClick} type="button">
+        <Button
+          skin="tertiary"
+          onClick={handleCloseClick}
+          type="button"
+          disabled={formState.isSubmitting}
+        >
           Cancelar
         </Button>
-        <Button skin="secondary" type="submit">
-          Criar
+        <Button
+          skin="secondary"
+          type="submit"
+          disabled={formState.isSubmitting}
+        >
+          Atualizar
         </Button>
       </div>
     </form>

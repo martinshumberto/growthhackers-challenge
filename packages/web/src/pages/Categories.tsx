@@ -11,6 +11,7 @@ import {
   IPagination,
   IPaginationMeta,
 } from '@/types/api';
+import { dateFormat } from '@/utils/helper';
 import notify from '@/utils/notify';
 import { useMemo, useState } from 'react';
 import { Edit2, Eye, Trash2 } from 'react-feather';
@@ -37,7 +38,12 @@ export default function Categories() {
       {
         Header: 'Criado em',
         accessor: 'createdAt',
-        Cell: ({ value }) => value,
+        Cell: ({ value }) => dateFormat(value),
+      },
+      {
+        Header: 'Atualizado em',
+        accessor: 'updatedAt',
+        Cell: ({ value }) => dateFormat(value),
       },
       {
         Header: 'Ações',
@@ -110,6 +116,16 @@ export default function Categories() {
       });
   };
 
+  useMemo(
+    () =>
+      !activeModal &&
+      fetchData({
+        limit: meta?.itemsPerPage || 10,
+        page: meta?.currentPage || 1,
+      }),
+    [activeModal]
+  );
+
   return (
     <>
       {activeModal === 'delete' && (
@@ -161,10 +177,7 @@ export default function Categories() {
       )}
       {activeModal === 'view' && (
         <Modal enableClose onClose={() => setActiveModal('')} skin="default">
-          <CategoryView
-            category={selectedItem}
-            onClose={() => setActiveModal('')}
-          />
+          <CategoryView category={selectedItem} />
         </Modal>
       )}
       <div className="flex flex-col w-full">

@@ -53,6 +53,11 @@ export default function Products() {
         Cell: ({ value }) => dateFormat(value),
       },
       {
+        Header: 'Atualizado em',
+        accessor: 'updatedAt',
+        Cell: ({ value }) => dateFormat(value),
+      },
+      {
         Header: 'Ações',
         accessor: '',
         Cell: (props) => {

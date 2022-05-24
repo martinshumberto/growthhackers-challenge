@@ -6,6 +6,7 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import notify from '@/utils/notify';
 import Textarea from '@/components/Textarea';
+import { IDefaultResponse } from '@/types/api';
 
 export default function CategoryNew({ onClose }) {
   const handleCloseClick = () => {
@@ -25,22 +26,15 @@ export default function CategoryNew({ onClose }) {
 
   const submit = async (data) => {
     await api
-      .post('/categories/new', data)
-      .then(() => {
+      .post<IDefaultResponse>('/categories/create', data)
+      .then(({ data }) => {
+        handleCloseClick();
         notify({
           title: 'Opa, tudo certo!',
-          message: 'A categoria foi criada com sucesso.',
+          message: data.message,
           type: 'success',
         });
-        handleCloseClick();
         reset();
-      })
-      .catch(({ response }) => {
-        notify({
-          title: 'Algo deu errado!',
-          message: response.data.message,
-          type: 'danger',
-        });
       });
   };
 
@@ -79,10 +73,19 @@ export default function CategoryNew({ onClose }) {
       </div>
 
       <div className="flex flex-col md:justify-end md:flex-row space-y-2 md:space-x-4 md:space-y-0 mt-6">
-        <Button skin="tertiary" onClick={handleCloseClick} type="button">
+        <Button
+          skin="tertiary"
+          onClick={handleCloseClick}
+          type="button"
+          disabled={formState.isSubmitting}
+        >
           Cancelar
         </Button>
-        <Button skin="secondary" type="submit">
+        <Button
+          skin="secondary"
+          type="submit"
+          disabled={formState.isSubmitting}
+        >
           Criar
         </Button>
       </div>
