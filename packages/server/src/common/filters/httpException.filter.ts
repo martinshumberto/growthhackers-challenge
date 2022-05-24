@@ -4,6 +4,7 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
@@ -21,16 +22,23 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let status =
       exception instanceof HttpException
         ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-    let message = (exception as HttpException).message;
+        : (exception as any).status ?? HttpStatus.INTERNAL_SERVER_ERROR;
+    let message =
+      (exception as any)?.message ??
+      (exception as any)?.response?.message ??
+      'Erro interno do servidor.';
 
     switch (exception.constructor) {
-      case QueryFailedError:
+      case UnprocessableEntityException:
         status = HttpStatus.UNPROCESSABLE_ENTITY;
+        message = exception;
+        break;
+      case QueryFailedError:
+        status = HttpStatus.BAD_REQUEST;
         message = (exception as QueryFailedError).message;
         break;
       case EntityNotFoundError:
-        status = HttpStatus.UNPROCESSABLE_ENTITY;
+        status = HttpStatus.NOT_FOUND;
         message = (exception as EntityNotFoundError).message;
         break;
       case CannotCreateEntityIdMapError:
@@ -51,6 +59,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
 export interface IResponseHttpError {
   status: number;
   message: string;
-  timestamp: string;
-  path: string;
+  timestamp?: string;
+  path?: string;
 }

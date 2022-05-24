@@ -10,7 +10,21 @@ async function bootstrap() {
   const logger: LoggerService = new LoggerService();
 
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      exceptionFactory: (errors) => {
+        let errorsRemap = errors.map((erro) =>
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          Object.entries(erro?.constraints).map(([key, value]) => value),
+        );
+        errorsRemap = [...new Set([].concat(...errorsRemap))];
+        return {
+          status: 422,
+          message: errorsRemap,
+        };
+      },
+    }),
+  );
 
   if (process.env.NODE_ENV === 'production') {
     app.use((req, res, next) => {

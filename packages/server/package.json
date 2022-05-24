@@ -20,7 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node --project tsconfig.build.json -r tsconfig-paths/register node_modules/typeorm/cli.js  --config config/ormconfig.ts",
-    "console": "ts-node --project tsconfig.build.json -r tsconfig-paths/register console.ts"
+    "console": "ts-node --project tsconfig.build.json -r tsconfig-paths/register src/console.ts"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -28,6 +28,7 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/typeorm": "^8.0.4",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "nestjs-console": "^7.0.1",
     "nestjs-typeorm-paginate": "^4.0.1",

@@ -31,7 +31,6 @@ export class ProductEntity {
     (category: CategoryEntity) => category.products,
     {
       eager: true,
-      onDelete: 'SET NULL',
     },
   )
   @JoinColumn({ name: 'categoryId' })
