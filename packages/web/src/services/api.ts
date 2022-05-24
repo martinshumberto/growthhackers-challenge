@@ -21,7 +21,7 @@ api.interceptors.response.use(undefined, (error) => {
       type: 'danger',
     });
   }
-  if (error && error.response && error.response.status === 403) {
+  if (error?.response?.status > 403 || error?.response?.status < 499) {
     notify({
       title: 'Opps... algo deu errado!',
       message:
@@ -30,21 +30,6 @@ api.interceptors.response.use(undefined, (error) => {
       type: 'danger',
     });
   }
-  // if (error && error.response && error.response.status === 412) {
-  //   store.addNotification({
-  //     title: __('somethingWentWorng'),
-  //     message: error.response?.data?.message,
-  //     type: 'danger',
-  //     insert: 'bottom',
-  //     container: 'bottom-right',
-  //     animationIn: ['animate__animated', 'animate__fadeIn'],
-  //     animationOut: ['animate__animated', 'animate__fadeOut'],
-  //     dismiss: {
-  //       duration: 3000,
-  //       onScreen: true,
-  //     },
-  //   });
-  // }
   return Promise.reject(error);
 });
 
