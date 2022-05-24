@@ -29,4 +29,12 @@ export class CategoryEntity {
   @Column()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  constructor(category?: Partial<CategoryEntity>) {
+    this.id = category?.id;
+    this.title = category?.title;
+    this.description = category?.description;
+    this.createdAt = category?.createdAt;
+    this.updatedAt = category?.updatedAt;
+  }
 }
