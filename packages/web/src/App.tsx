@@ -6,8 +6,8 @@ export default function App() {
   const page = useRoutes(routes);
   return (
     <>
-      {page}
       <ReactNotifications />
+      {page}
       <div id="modal-root"></div>
     </>
   );
