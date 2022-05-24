@@ -11,7 +11,7 @@ export const api = axios.create({
 });
 
 api.interceptors.response.use(undefined, (error) => {
-  if (!process.browser) {
+  if (!(typeof window !== 'undefined')) {
     return Promise.reject(error);
   }
   if (error.message === 'Network Error' && !error.response) {
