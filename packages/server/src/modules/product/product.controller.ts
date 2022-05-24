@@ -109,13 +109,7 @@ export class ProductController {
     const products = await this.productService.findAllByCategoryId(
       body.categoryId,
     );
-
-    // const filename = `exportacao-produtos-${new Date().getTime()}.json`;
-    // const mimetype = 'application/json';
-    // res.setHeader('Content-Type', mimetype);
-    // res.setHeader('Content-disposition', 'attachment; filename=' + filename);
-    // res.send(products);
-
+    // DISCLAIMER: Here you should create a temporary save file and then delete it. Because of the short time, I made it this limited way.
     return res.status(HttpStatus.OK).json(products);
   }
 }

@@ -15,6 +15,7 @@ export default function ProductExport({ onClose }) {
 
   const submit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     await api
       .post('/products/export', {
         categoryId: categoryId,
@@ -45,7 +46,8 @@ export default function ProductExport({ onClose }) {
             type: 'warning',
           });
         }
-      });
+      })
+      .finally(() => setLoading(false));
   };
   const fetchCategories = async (search = null) => {
     return await api

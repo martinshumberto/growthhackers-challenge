@@ -16,6 +16,7 @@ export default function ProductImport({ onClose }) {
 
   const uploadFile = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const formData = new FormData();
     formData.append('file', file);
     formData.append('categoryId', categoryId);
@@ -26,14 +27,16 @@ export default function ProductImport({ onClose }) {
         url: '/products/import',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
-      }).then(({ data }) => {
-        notify({
-          title: 'Opa, tudo certo!',
-          message: data.message,
-          type: 'success',
-        });
-        handleCloseClick();
-      });
+      })
+        .then(({ data }) => {
+          notify({
+            title: 'Opa, tudo certo!',
+            message: data.message,
+            type: 'success',
+          });
+          handleCloseClick();
+        })
+        .finally(() => setLoading(true));
     } catch (error) {
       console.log(error);
     }
