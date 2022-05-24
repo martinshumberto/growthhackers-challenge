@@ -75,7 +75,7 @@ export class ProductController {
     });
   }
 
-  @Post('/import/:id')
+  @Post('/import')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -83,31 +83,39 @@ export class ProductController {
       }),
     }),
   )
-  async upload(@Res() res, @UploadedFile() file, @Param('id') id: string) {
-    try {
-      const pathFileTemp = `${DIR_TEMP_FILES}/${file.filename}`;
-      const products = await this.productService.extractJSONFromFile(
-        pathFileTemp,
-      );
+  async import(@Res() res, @UploadedFile() file, @Body() body) {
+    const pathFileTemp = `${DIR_TEMP_FILES}/${file.filename}`;
+    const products = await this.productService.extractJSONFromFile(
+      pathFileTemp,
+    );
 
-      const productsWithCategory = products.map((product) => {
-        return {
-          ...product,
-          categoryId: id,
-        };
-      });
-      await this.productService.createMany(productsWithCategory);
+    const productsWithCategory = products.map((product) => {
+      return {
+        ...product,
+        categoryId: body?.categoryId ?? null,
+      };
+    });
+    await this.productService.createMany(productsWithCategory);
 
-      return res.status(HttpStatus.OK).json({
-        status: HttpStatus.OK,
-        message:
-          'A importação foi um sucesso, navegue até a página de produtos para visualizar.',
-      });
-    } catch ($e) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        message: 'Algo deu errado ao tentar processar o arquivo.',
-        errors: $e,
-      });
-    }
+    return res.status(HttpStatus.OK).json({
+      status: HttpStatus.OK,
+      message:
+        'A importação foi um sucesso, navegue até a página de produtos para visualizar.',
+    });
+  }
+
+  @Post('/export')
+  async export(@Res() res, @Body() body) {
+    const products = await this.productService.findAllByCategoryId(
+      body.categoryId,
+    );
+
+    // const filename = `exportacao-produtos-${new Date().getTime()}.json`;
+    // const mimetype = 'application/json';
+    // res.setHeader('Content-Type', mimetype);
+    // res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+    // res.send(products);
+
+    return res.status(HttpStatus.OK).json(products);
   }
 }

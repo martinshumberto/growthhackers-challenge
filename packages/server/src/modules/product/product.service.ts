@@ -68,6 +68,16 @@ export class ProductService {
     return await paginate<ProductEntity>(queryBuilder, options);
   }
 
+  async findAllByCategoryId(categoryId) {
+    const queryBuilder = this.repository.createQueryBuilder('products');
+    if (categoryId) {
+      queryBuilder.where('products.categoryId = :categoryId', { categoryId });
+      queryBuilder.leftJoinAndSelect('products.category', 'categories');
+    }
+    queryBuilder.orderBy('products.updatedAt', 'DESC');
+    return queryBuilder.getMany();
+  }
+
   async extractJSONFromFile(pathFileTemp): Promise<ProductDto[]> {
     const readFileAsync = promisify(fs.readFile);
     const dataStringJSON = await readFileAsync(pathFileTemp, 'utf8');
@@ -87,9 +97,5 @@ export class ProductService {
     await unlinkAsync(pathFileTemp);
 
     return dataJSON;
-  }
-
-  async findAllNotPaginate() {
-    return await this.repository.find();
   }
 }

@@ -5,48 +5,48 @@ import Select from '@/components/Select';
 import { useEffect, useState } from 'react';
 import { ICategory, IPagination } from '@/types/api';
 
-export default function ProductImport({ onClose }) {
+export default function ProductExport({ onClose }) {
   const [loading, setLoading] = useState(false);
   const [categoriesOptions, setCategoriesOptions] = useState([]);
-  const [file, setFile] = useState(null);
   const [categoryId, setCategoryId] = useState(null);
   const handleCloseClick = () => {
     onClose();
   };
 
-  const uploadFile = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('categoryId', categoryId);
-
-    try {
-      await api({
-        method: 'post',
-        url: '/products/import',
-        data: formData,
-        headers: { 'Content-Type': 'multipart/form-data' },
-      }).then(({ data }) => {
-        notify({
-          title: 'Opa, tudo certo!',
-          message: data.message,
-          type: 'success',
-        });
+  const submit = async (event) => {
+    event.preventDefault();
+    await api
+      .post('/products/export', {
+        categoryId: categoryId,
+      })
+      .then(({ data }) => {
         handleCloseClick();
+        if (data.length) {
+          const el = document.createElement('a');
+          document.body.appendChild(el);
+          const jsonData =
+            'data:text/json;charset=utf-8,' +
+            encodeURIComponent(JSON.stringify(data));
+          el.setAttribute('href', jsonData);
+          el.setAttribute('download', 'export.json');
+          el.click();
+
+          notify({
+            title: 'Opa, tudo certo!',
+            message:
+              'A exportação foi realizada com sucesso, em instantes o download iniciará!',
+            type: 'success',
+          });
+        } else {
+          notify({
+            title: 'Opps..., algo não deu certo!',
+            message:
+              'Não encontramos registros nesta categoria ou não tem produtos cadastrados!',
+            type: 'warning',
+          });
+        }
       });
-    } catch (error) {
-      console.log(error);
-    }
   };
-
-  const forceDownload = (path) => {
-    const el = document.createElement('a');
-    document.body.appendChild(el);
-    el.setAttribute('href', path);
-    el.setAttribute('download', 'modelo.json');
-    el.click();
-  };
-
   const fetchCategories = async (search = null) => {
     return await api
       .get<IPagination<ICategory>>(`/categories`, {
@@ -71,24 +71,10 @@ export default function ProductImport({ onClose }) {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <form onSubmit={uploadFile} className="w-full">
+      <form onSubmit={submit} className="w-full">
         <div className="flex flex-col md:flex-1 w-full">
           <div className="flex flex-col items-center w-full">
             <div className="flex w-full">
-              <Button fullWidth skin="tertiary">
-                {file ? file.name : 'Selecionar arquivo JSON'}
-                <input
-                  className="absolute left-0 top-0 opacity-0 h-full z-50 cursor-pointer"
-                  type="file"
-                  accept=".json"
-                  onChange={(event) => {
-                    setFile(event.target.files[0]);
-                  }}
-                  disabled={loading}
-                />
-              </Button>
-            </div>
-            <div className="flex w-full mt-4">
               <Select
                 async
                 label="Categoria"
@@ -119,23 +105,12 @@ export default function ProductImport({ onClose }) {
             >
               Cancelar
             </Button>
-            <Button skin="secondary" type="submit" disabled={loading}>
-              Importar
+            <Button skin="secondary" onClick={submit} disabled={loading}>
+              Exportar
             </Button>
           </div>
         </div>
       </form>
-
-      <small className="font-md text-gray-500 text-sm mt-6 text-center">
-        Use nosso{' '}
-        <a
-          onClick={() => forceDownload('/modelo.json')}
-          className="underline text-primary cursor-pointer"
-        >
-          modelo
-        </a>{' '}
-        de arquivo se você tem alguma dúvida.
-      </small>
     </div>
   );
 }

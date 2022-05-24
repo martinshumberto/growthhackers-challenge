@@ -1,0 +1,10 @@
+{
+  "name": "growthhackers-challenge",
+  "repository": "https://github.com/martinshumberto/growthhackers-challenge.git",
+  "author": "Humberto Martins <humberto@consilio.com.br>",
+  "license": "MIT",
+  "scripts": {
+    "deploy:server": "cd packages/server && git subtree push --prefix server heroku-server master",
+    "deploy:web": "cd packages/server && git subtree push --prefix web heroku-web master"
+  }
+}

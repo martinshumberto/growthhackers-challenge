@@ -1,5 +1,6 @@
 import Button from '@/components/Button';
 import Modal from '@/components/Modal';
+import ProductExport from '@/components/modal-contents/ProductExport';
 import ProductImport from '@/components/modal-contents/ProductImport';
 import ProductNew from '@/components/modal-contents/ProductNew';
 import ProductUpdate from '@/components/modal-contents/ProductUpdate';
@@ -200,6 +201,23 @@ export default function Products() {
           enableClose
         >
           <ProductImport onClose={() => setActiveModal('')} />
+        </Modal>
+      )}
+
+      {activeModal === 'export' && (
+        <Modal
+          onClose={() => setActiveModal('')}
+          title="Exportar produtos"
+          subTitle={
+            <>
+              Para importar seus produtos de um arquivo .json, basta escolher ou
+              não a categoria que desejar filtrar, e clique em exportar.
+            </>
+          }
+          skin="compact"
+          enableClose
+        >
+          <ProductExport onClose={() => setActiveModal('')} />
         </Modal>
       )}
       {activeModal === 'view' && (
