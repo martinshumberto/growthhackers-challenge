@@ -8,7 +8,7 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
-import NotFoundCustomException from 'src/common/exceptions/notFound.exception';
+import NotFoundCustomException from '../../common/exceptions/notFound.exception';
 import { validate } from 'class-validator';
 import { promisify } from 'util';
 import * as fs from 'fs';
@@ -50,7 +50,7 @@ export class ProductService {
     return await this.repository.findOne(params);
   }
 
-  async getById(id: string): Promise<ProductEntity> {
+  async findById(id: string): Promise<ProductEntity> {
     return await this.repository.findOne({
       where: {
         id,

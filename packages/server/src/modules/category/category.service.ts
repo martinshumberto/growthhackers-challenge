@@ -8,7 +8,7 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
-import NotFoundCustomException from 'src/common/exceptions/notFound.exception';
+import NotFoundCustomException from '../../common/exceptions/notFound.exception';
 import { validate } from 'class-validator';
 
 enum PostgresErrorCode {
@@ -70,7 +70,7 @@ export class CategoryService {
     return await this.repository.findOne(params);
   }
 
-  async getById(id: string): Promise<CategoryEntity> {
+  async findById(id: string): Promise<CategoryEntity> {
     return await this.repository.findOne({
       where: {
         id,

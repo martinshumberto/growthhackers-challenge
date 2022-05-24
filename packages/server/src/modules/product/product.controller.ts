@@ -41,7 +41,7 @@ export class ProductController {
 
   @Get('/show/:id')
   async show(@Param('id') id: string): Promise<ProductEntity> {
-    return this.productService.getById(id);
+    return this.productService.findById(id);
   }
 
   @Post('/create')

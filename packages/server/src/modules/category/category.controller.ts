@@ -41,7 +41,7 @@ export class CategoryController {
 
   @Get('/show/:id')
   async show(@Param('id') id: string): Promise<CategoryEntity> {
-    return this.categoryService.getById(id);
+    return this.categoryService.findById(id);
   }
 
   @Post('/create')
