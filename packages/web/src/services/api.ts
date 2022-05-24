@@ -7,7 +7,7 @@ export const api = axios.create({
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
-  baseURL: process.env.NEXT_PUBLIC_API_HOST_URL,
+  baseURL: import.meta.env.VITE_APP_API_URL,
 });
 
 api.interceptors.response.use(undefined, (error) => {
