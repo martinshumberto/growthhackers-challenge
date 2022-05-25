@@ -10,8 +10,8 @@
     "build:server": "cd packages/server && yarn build",
     "build:web": "cd packages/web && yarn build",
     "build": "yarn build:server && yarn build:web",
-    "deploy:server": "cd packages/server && git subtree push --prefix server growthhackers-server master",
-    "deploy:web": "cd packages/server && git subtree push --prefix web growthhackers-web master",
+    "deploy:server": "git subtree push --prefix packages/server heroku-server master",
+    "deploy:web": "git subtree push --prefix packages/web heroku-web master",
     "deploy": "yarn deploy:server && yarn deploy:web",
     "logs:deploy": "heroku logs --tail"
   }
