@@ -8,14 +8,20 @@ permitindo o cadastro de novos produtos. A listagem de produtos pode ser exporta
 importada dentro de uma categoria diferente.
 
 
-## Funcionalidades
+## Features
 
-- Temas dark e light
-- Preview em tempo real
-- Modo tela cheia
-- Multiplataforma
-
-
+- Produtos
+    - Criar
+    - Editar
+    - Atualizar
+    - Deletar
+    - Importar
+    - Exportar
+- Categorias
+    - Criar
+    - Editar
+    - Atualizar
+    - Deletar
 ## Stack utilizada
 
     - ReactJS
