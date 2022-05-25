@@ -51,6 +51,6 @@ async function bootstrap() {
   });
 
   logger.verbose(`App listening on port => ${process.env.PORT || 4000}`);
-  await app.listen(4000);
+  await app.listen(process.env.PORT || 4000);
 }
 bootstrap();
