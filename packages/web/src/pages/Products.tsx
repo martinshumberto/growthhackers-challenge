@@ -226,10 +226,10 @@ export default function Products() {
         </Modal>
       )}
       <div className="flex flex-col w-full">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-6 space-y-3 md:space-y-0">
           <h2 className="flex text-2xl font-bold text-primary">Produtos</h2>
 
-          <div className="flex space-x-4">
+          <div className="flex flex-col md:flex-row md:justify-end md:space-x-4 space-y-2 md:space-y-0 w-full">
             <Button skin="primary" onClick={() => setActiveModal('import')}>
               Importar
             </Button>
