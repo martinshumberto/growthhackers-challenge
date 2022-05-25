@@ -4,7 +4,15 @@
   "author": "Humberto Martins <humberto@consilio.com.br>",
   "license": "MIT",
   "scripts": {
-    "deploy:server": "cd packages/server && git subtree push --prefix server heroku-server master",
-    "deploy:web": "cd packages/server && git subtree push --prefix web heroku-web master"
+    "lint:server": "cd packages/server && yarn prebuild && yarn lint",
+    "lint:web": "cd packages/web && yarn lint",
+    "lint": "yarn lint:server && yarn lint:web",
+    "build:server": "cd packages/server && yarn build",
+    "build:web": "cd packages/web && yarn build",
+    "build": "yarn build:server && yarn build:web",
+    "deploy:server": "cd packages/server && git subtree push --prefix server growthhackers-server master",
+    "deploy:web": "cd packages/server && git subtree push --prefix web growthhackers-web master",
+    "deploy": "yarn deploy:server && yarn deploy:web",
+    "logs:deploy": "heroku logs --tail"
   }
 }

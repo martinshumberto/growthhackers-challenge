@@ -25,7 +25,7 @@ export interface IPaginationMeta {
   totalPages: number;
   currentPage: number;
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface IPagination<Item = any> {
   items: Item[];
   meta: IPaginationMeta;
